@@ -8,7 +8,7 @@ app = FastAPI()
 async def get_numbers():
     try:
         result = await fetch_numbers()
-        add_numbers(result["numbers"])  # Save the fetched numbers to memory
+        add_numbers(result["numbers"])  # Save numbers and also modify in case Affordmeds json has a different format
         return {"message": "Numbers fetched and stored", "new_numbers": result["numbers"]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

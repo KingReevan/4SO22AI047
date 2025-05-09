@@ -1,7 +1,7 @@
 import httpx
 from token_manager import get_token
 
-NUMBERS_URL = "http://127.0.0.1:9000/api/numbers"
+NUMBERS_URL = "http://127.0.0.1:9000/api/numbers"   #Affordmeds numbers endpoint
 
 async def fetch_numbers():
     token = await get_token()
@@ -13,4 +13,8 @@ async def fetch_numbers():
     async with httpx.AsyncClient(timeout=0.5) as client:  # 500ms timeout
         response = await client.get(NUMBERS_URL, headers=headers)
         response.raise_for_status()
-        return response.json()
+        data = response.json()
+        
+        print("debugLine: Received JSON response from company server:", data)
+
+        return data
