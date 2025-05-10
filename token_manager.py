@@ -19,7 +19,7 @@ async def get_token():
         async with httpx.AsyncClient() as client:
             response = await client.post(TOKEN_URL, json={    #confirm the expected keys with Affordmed
                 "username": USERNAME,
-                "password": PASSWORD
+                "password": PASSWORD,
             })
             response.raise_for_status()
             data = response.json()
