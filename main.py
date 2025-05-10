@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from number_fetcher import fetch_numbers
-from number_store import add_numbers, get_all_numbers, get_average, get_count, reset_numbers
+from number_store import add_numbers, get_all_numbers, get_average
 
 app = FastAPI()
 
