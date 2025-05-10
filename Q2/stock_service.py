@@ -14,7 +14,7 @@ async def get_average_price_data(ticker: str, minutes: int):
             if not price_history:
                 return {
                     "averageStockPrice": 0.0,
-                    "priceHistory": []
+                    "priceHistory": [],
                 }
 
             prices = [entry["price"] for entry in price_history]
@@ -22,7 +22,7 @@ async def get_average_price_data(ticker: str, minutes: int):
 
             return {
                 "averageStockPrice": round(avg_price, 6),
-                "priceHistory": price_history
+                "priceHistory": price_history,
             }
 
     except httpx.RequestError:
