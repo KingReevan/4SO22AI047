@@ -1,9 +1,18 @@
 import httpx
 import time
 
-TOKEN_URL = "http://127.0.0.1:9000/api/token"  #Affordmeds token endpoint
+TOKEN_URL = "http://20.244.56.144/evaluation-service/auth"  #Affordmeds token endpoint
 USERNAME = "reevan"
 PASSWORD = "dmello"
+
+AUTH_PAYLOAD = {
+    "email": "reevandmello@gmail.com",
+    "name": "reevan d mello",
+    "rollNo": "4so22ai047",
+    "accessCode": "KjJAxP",
+    "clientID": "52c67b27-de13-4f9a-9689-25e9f03902b0",
+	"clientSecret": "sQFUMHxpypbQuSZq",
+}
 
 # Store token and expiry time
 _token = None
@@ -17,16 +26,13 @@ async def get_token():
     # If token is expired or doesn't exist, fetch a new one
     if _token is None or current_time >= _token_expiry:
         async with httpx.AsyncClient() as client:
-            response = await client.post(TOKEN_URL, json={    #confirm the expected keys with Affordmed
-                "username": USERNAME,
-                "password": PASSWORD,
-            })
+            response = await client.post(TOKEN_URL, json=AUTH_PAYLOAD)
             response.raise_for_status()
             data = response.json()
 
             print("debugLine: Affordmeds token response =", data)
 
-            _token = data["token"]  #adjust according to the response
-            _token_expiry = current_time + (5 * 60) - 10  # buffer of 10s before expiry
+            _token = data["access_token"]
+            _token_expiry = data["expires_in"] - 10  # 10 sec buffer
 
     return _token
