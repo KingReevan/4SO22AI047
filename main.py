@@ -4,12 +4,20 @@ from number_store import add_numbers, get_all_numbers, get_average, get_count, r
 
 app = FastAPI()
 
-@app.get("/get-numbers")
-async def get_numbers():
+@app.get("/numbers/{number_type}")
+async def get_numbers(number_type: str):
     try:
-        result = await fetch_numbers()
-        add_numbers(result["numbers"])  # Save numbers and also modify in case Affordmeds json has a different format
-        return {"message": "Numbers fetched and stored", "new_numbers": result["numbers"]}
+        result = await fetch_numbers(number_type)  # Pass type to fetch_numbers
+        prev_state = get_all_numbers().copy()
+        add_numbers(result["numbers"])
+        curr_state = get_all_numbers()
+
+        return {
+            "windowPrevState": prev_state,
+            "windowCurrState": curr_state,
+            "numbers": result["numbers"],
+            "avg": round(get_average(), 2)
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
@@ -19,15 +27,7 @@ def average():
     avg = get_average()
     return {"average": avg}
 
-@app.get("/count")
-def count():
-    return {"count": get_count()}
-
 @app.get("/all")
 def all_numbers():
     return {"all_numbers": get_all_numbers()}
 
-@app.post("/reset")
-def reset():
-    reset_numbers()
-    return {"message": "All numbers have been cleared"}
